@@ -59,7 +59,6 @@ public class ProductServiceImpl implements ProductService {
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
         product.setStock(dto.getStock());
-        productMapper.updateById(product);
         int rows=productMapper.updateById(product);
         if(rows==0){
             throw new BusinessException("商品不存在或未变更: " + id);
