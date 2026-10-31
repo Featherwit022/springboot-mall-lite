@@ -1,0 +1,27 @@
+# 构建产物
+target/
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# 本地配置：真实凭据，永不提交
+application-local.yml
+application-local.yaml
+config/application-local.yml
+.env
+*.local.yml
+
+# 日志
+logs/
+*.log
+
+# 系统
+.DS_Store
+Thumbs.db

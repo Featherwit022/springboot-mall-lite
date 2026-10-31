@@ -1,0 +1,30 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: mall
+  profiles:
+    active: local
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 3000
+logging:
+  level:
+    com.example.mall: debug   # 自己的包打 debug，方便看后面的 SQL
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true                       # create_time → createTime
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl    # 开发期把 SQL 打出来
+  global-config:
+    db-config:
+      id-type: auto                                          # 主键自增
+  mapper-locations: classpath*:/mapper/**/*.xml
+  type-aliases-package: com.example.mall.entity
+mall:
+  name: 小卖部
+  order:
+    pay-timeout: 15m          # 自动绑定成 Duration.ofMinutes(15)
+    max-items: 20

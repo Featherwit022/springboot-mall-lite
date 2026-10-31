@@ -1,0 +1,9 @@
+# application-dev.yml
+logging:
+  level:
+    com.example.mall: debug
+    com.example.mall.mapper: debug      # 直接把 SQL 打出来
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

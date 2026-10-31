@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.mall.mapper.ProductMapper">
+    <update id="deductStock">
+        UPDATE product
+        SET stock=stock-#{qty}
+        WHERE id=#{id} AND stock>=#{qty}
+    </update>
+
+    <select id="selectPageWithCategory" resultType="com.example.mall.vo.ProductVO">
+        SELECT p.id, p.name, p.price, p.stock,
+        c.name AS categoryName
+        FROM product p
+        JOIN category c ON c.id = p.category_id
+        WHERE p.status = 1
+        <if test="categoryId != null">
+            AND p.category_id = #{categoryId}
+        </if>
+        <if test="keyword != null and keyword != ''">
+            AND p.name LIKE CONCAT('%', #{keyword}, '%')
+        </if>
+        ORDER BY p.id ASC
+    </select>
+    <select id="selectByIdForUpdate" resultType="com.example.mall.entity.Product">
+        SELECT id, name, category_id, price, stock, status, create_time
+        FROM product
+        WHERE id = #{id}
+            FOR UPDATE
+    </select>
+</mapper>

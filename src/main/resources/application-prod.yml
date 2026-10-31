@@ -1,0 +1,12 @@
+logging:
+  level:
+    root: info
+    com.example.mall: info
+    com.example.mall.mapper: info
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}   # 绝不把密码提交到 git
+    hikari:
+      maximum-pool-size: 30
