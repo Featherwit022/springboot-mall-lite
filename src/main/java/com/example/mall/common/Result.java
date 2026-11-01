@@ -4,7 +4,7 @@ public class Result<T> {
     private int code;
     private String message;
     private T data;
-
+    private String traceId;
 
 
     public Result() {}
@@ -14,7 +14,7 @@ public class Result<T> {
     }
 
     public static <T> Result<T> ok(T data) {
-        return new Result<>(ResultCode.SUCCESS.getCode(), "成功", data);
+        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
     }
 
     public static <T> Result<T> ok() { return ok(null); }
@@ -24,7 +24,9 @@ public class Result<T> {
     }
 
     public static <T> Result<T> fail(ResultCode rc, String detail) {
-        return new Result<>(rc.getCode(), detail, null);
+        Result<T> r = new Result<>(rc.getCode(), detail, null);
+        r.setTraceId(org.slf4j.MDC.get("traceId"));
+        return r;
     }
 
 
@@ -50,5 +52,13 @@ public class Result<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public String getTraceId() {
+        return traceId;
+    }
+
+    public void setTraceId(String traceId) {
+        this.traceId = traceId;
     }
 }
