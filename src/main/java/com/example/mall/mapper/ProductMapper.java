@@ -6,7 +6,6 @@ import com.example.mall.entity.Product;
 import com.example.mall.vo.ProductVO;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
 public interface ProductMapper extends BaseMapper<Product> {
     IPage<ProductVO> selectPageWithCategory(IPage<ProductVO> page,
                                             @Param("keyword") String keyword,

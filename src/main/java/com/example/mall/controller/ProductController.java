@@ -2,42 +2,47 @@ package com.example.mall.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.example.mall.common.Result;
-import com.example.mall.common.ResultCode;
 import com.example.mall.dto.ProductCreateDTO;
 import com.example.mall.dto.ProductQueryDTO;
-import com.example.mall.entity.Product;
 import com.example.mall.service.ProductService;
 import com.example.mall.vo.ProductVO;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-@Validated
+
 @RestController
 @RequestMapping("/api/products")
-
 public class ProductController {
+
     private final ProductService productService;
 
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
+
     @GetMapping
     public Result<IPage<ProductVO>> page(@Valid ProductQueryDTO query) {
-        return Result.ok(productService.page(query.getPage(), query.getSize(), query.getCategoryId(), query.getKeyword()));
+        return Result.ok(productService.page(query.getPage(), query.getSize(),
+                query.getCategoryId(), query.getKeyword()));
     }
+
+    /**
+     * 查不到时由 Service 抛 BusinessException(NOT_FOUND)，这里不再判 null，
+     * 否则"Service 抛异常"和"Controller 返回 4004"两套语义只能生效一套。
+     */
     @GetMapping("/{id}")
     public Result<ProductVO> detail(@PathVariable Long id) {
-        ProductVO vo = productService.getByVOId(id);
-        return vo==null?Result.fail(ResultCode.NOT_FOUND):Result.ok(vo);
+        return Result.ok(productService.getByVOId(id));
     }
+
     @PostMapping
-    public Result<Long> create(@RequestBody @Valid ProductCreateDTO dto){
+    public Result<Long> create(@RequestBody @Valid ProductCreateDTO dto) {
         return Result.ok(productService.create(dto));
     }
+
     @PutMapping("/{id}")
     public Result<Void> update(@PathVariable Long id,
-                               @RequestBody ProductCreateDTO dto) {
+                               @RequestBody @Valid ProductCreateDTO dto) {
         productService.update(id, dto);
         return Result.ok();
     }
@@ -47,5 +52,4 @@ public class ProductController {
         productService.remove(id);
         return Result.ok();
     }
-
 }

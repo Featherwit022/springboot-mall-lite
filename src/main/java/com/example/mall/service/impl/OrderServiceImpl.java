@@ -40,10 +40,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String createOrder(Long userId, List<OrderItemDTO> items, String idempotentKey) {
-        if (idempotentKey != null && !idempotentKey.isEmpty()) {
+        // 归一化：null 和空白串都当作"不传"。空串会作为真实值写进 DB，
+        // 而 MySQL 唯一索引对 '' 是校验的（只对 NULL 放行），同一用户第二单必然撞 uk_user_idem。
+        String key = normalizeKey(idempotentKey);
+
+        if (key != null) {
             Order exist = orderMapper.selectOne(new LambdaQueryWrapper<Order>()
                     .eq(Order::getUserId, userId)
-                    .eq(Order::getIdempotentKey, idempotentKey));
+                    .eq(Order::getIdempotentKey, key));
             if (exist != null) {
                 return exist.getOrderNo();
             }
@@ -78,7 +82,7 @@ public class OrderServiceImpl implements OrderService {
         order.setUserId(userId);
         order.setTotalAmount(total);
         order.setStatus(0);
-        order.setIdempotentKey(idempotentKey);
+        order.setIdempotentKey(key);
         orderMapper.insert(order);
         for (OrderItem row : rows) {
             row.setOrderId(order.getId());                 // 用回填的 id 关联
@@ -88,12 +92,25 @@ public class OrderServiceImpl implements OrderService {
     }
     @Override
     public String findOrderNo(Long userId, String idempotentKey) {
-        if (idempotentKey == null || idempotentKey.isEmpty()) return null;
+        String key = normalizeKey(idempotentKey);
+        if (key == null) {
+            return null;
+        }
         Order o = orderMapper.selectOne(new LambdaQueryWrapper<Order>()
                 .eq(Order::getUserId, userId)
-                .eq(Order::getIdempotentKey, idempotentKey));
+                .eq(Order::getIdempotentKey, key));
         return o == null ? null : o.getOrderNo();
     }
+
+    /** null / 空串 / 纯空白 → null，其余去首尾空格。写入与查询必须走同一个口径。 */
+    private static String normalizeKey(String idempotentKey) {
+        if (idempotentKey == null) {
+            return null;
+        }
+        String trimmed = idempotentKey.trim();
+        return trimmed.isEmpty() ? null : trimmed;
+    }
+
     private static final DateTimeFormatter ORDER_NO_TIME =
             DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS");
     private String nextOrderNo(){

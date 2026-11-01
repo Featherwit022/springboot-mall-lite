@@ -7,7 +7,7 @@ spring:
   application:
     name: mall
   profiles:
-    active: local
+    active: dev,local
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:

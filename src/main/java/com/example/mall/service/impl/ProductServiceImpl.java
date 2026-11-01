@@ -2,7 +2,9 @@ package com.example.mall.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.mall.annotation.CostTime;
 import com.example.mall.common.BusinessException;
+import com.example.mall.common.ResultCode;
 import com.example.mall.dto.ProductCreateDTO;
 import com.example.mall.entity.Category;
 import com.example.mall.entity.Product;
@@ -36,14 +38,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Long create(ProductCreateDTO dto) {
-        Product product=new Product();
+        Product product = new Product();
         product.setCategoryId(dto.getCategoryId());
         product.setName(dto.getName());
         product.setPrice(dto.getPrice());
         product.setStock(dto.getStock());
         product.setStatus(1);
-        int rows=productMapper.insert(product);
-        return rows==0?null:product.getId();
+        int rows = productMapper.insert(product);
+        if (rows == 0) {
+            // 返回 null 会变成 {"code":0,"data":null}，调用方以为成功却拿不到 id
+            throw new BusinessException("商品创建失败");
+        }
+        return product.getId();
     }
 
     @Override
@@ -74,10 +80,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @CostTime("商品详情")
     public ProductVO getByVOId(Long id) {
         Product product = productMapper.selectById(id);
         if (product == null) {
-            throw new BusinessException("商品不存在：" + id);
+            // 语义上这是"资源不存在"，用 4004 而不是通用的 4100
+            throw new BusinessException(ResultCode.NOT_FOUND, "商品不存在：" + id);
         }
         ProductVO productVO = new ProductVO();
         BeanUtils.copyProperties(product, productVO);

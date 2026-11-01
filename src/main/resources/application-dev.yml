@@ -16,3 +16,8 @@ management:
   endpoint:
     health:
       show-details: always
+info:
+  app:
+    name: ${spring.application.name}
+    version: 1.0.0
+    description: 电商练习项目

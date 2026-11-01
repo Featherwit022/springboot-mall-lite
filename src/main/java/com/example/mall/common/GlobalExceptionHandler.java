@@ -18,8 +18,8 @@ public class GlobalExceptionHandler {
     /** 业务异常：这是"预期内"的失败，只记 warn，不打堆栈 */
     @ExceptionHandler(BusinessException.class)
     public Result<Void> handleBiz(BusinessException e) {
-        log.warn("业务异常: {}", e.getMessage());
-        return Result.fail(ResultCode.BIZ_ERROR, e.getMessage());
+        log.warn("业务异常: {}（{}）", e.getMessage(), e.getCode());
+        return Result.fail(e.getCode(), e.getMessage());
     }
 
     /** @Valid @RequestBody 校验失败 */
