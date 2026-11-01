@@ -1,8 +1,6 @@
 package com.example.mall.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -16,9 +14,10 @@ public class Product {
     private BigDecimal price;
     private Integer stock;
     private Integer status;
+    @TableField(value = "create_time", fill = FieldFill.INSERT)
     private LocalDateTime createTime;
-
-
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
 
 
 
@@ -71,6 +70,14 @@ public class Product {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(LocalDateTime updateTime) {
+        this.updateTime = updateTime;
     }
 
     public LocalDateTime getCreateTime() {

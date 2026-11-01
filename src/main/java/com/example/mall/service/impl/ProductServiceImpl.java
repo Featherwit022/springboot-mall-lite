@@ -12,8 +12,6 @@ import com.example.mall.vo.ProductVO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 
 @Service
 public class ProductServiceImpl implements ProductService {
@@ -45,7 +43,6 @@ public class ProductServiceImpl implements ProductService {
         product.setPrice(dto.getPrice());
         product.setStock(dto.getStock());
         product.setStatus(1);
-        product.setCreateTime(LocalDateTime.now());
         int rows=productMapper.insert(product);
         return rows==0?null:product.getId();
     }
