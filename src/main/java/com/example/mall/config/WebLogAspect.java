@@ -42,7 +42,7 @@ public class WebLogAspect {
         }
     }
     // 加在 WebLogAspect 里：只切"打了 @CostTime 的方法"
-    @Around("@annotation(costTime)")
+    @Around("execution(* com.example.mall.service..*.*(..))&&@annotation(costTime)")
     public Object costAround(ProceedingJoinPoint pjp, CostTime costTime) throws Throwable {
         long start = System.currentTimeMillis();
         try {

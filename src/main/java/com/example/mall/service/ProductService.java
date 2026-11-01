@@ -5,8 +5,6 @@ import com.example.mall.dto.ProductCreateDTO;
 import com.example.mall.entity.Product;
 import com.example.mall.vo.ProductVO;
 
-import java.util.List;
-
 public interface ProductService {
 
     IPage<ProductVO> page(long current, long size, Long categoryId, String keyword);

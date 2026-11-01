@@ -1,8 +1,8 @@
 package com.example.mall.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.example.mall.annotation.CostTime;
 import com.example.mall.common.BusinessException;
 import com.example.mall.dto.ProductCreateDTO;
 import com.example.mall.entity.Product;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 
 @Service
@@ -33,6 +32,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @CostTime("商品详情")
     public Product getById(Long id) {
         return productMapper.selectById(id);
     }
