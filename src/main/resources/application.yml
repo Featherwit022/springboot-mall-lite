@@ -11,13 +11,9 @@ spring:
     hikari:
       maximum-pool-size: 10
       connection-timeout: 3000
-logging:
-  level:
-    com.example.mall: debug   # 自己的包打 debug，方便看后面的 SQL
 mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true                       # create_time → createTime
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl    # 开发期把 SQL 打出来
   global-config:
     db-config:
       id-type: auto                                          # 主键自增

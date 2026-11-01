@@ -7,3 +7,12 @@ logging:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,loggers,threaddump
+      base-path: /actuator          # 默认就是这个，写出来便于以后改
+  endpoint:
+    health:
+      show-details: always

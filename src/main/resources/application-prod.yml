@@ -10,3 +10,17 @@ spring:
     password: ${DB_PASSWORD}   # 绝不把密码提交到 git
     hikari:
       maximum-pool-size: 30
+management:
+  server:
+    port: 8081              # 独立端口，不跟 8080 混
+    address: 127.0.0.1      # 只监听本机，外部完全访问不到
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: never   # 线上不给外部看组件细节
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
