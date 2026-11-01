@@ -9,11 +9,12 @@ public interface ProductService {
 
     IPage<ProductVO> page(long current, long size, Long categoryId, String keyword);
 
-    Product getById(Long id);
 
     Long create(ProductCreateDTO dto);
 
     void update(Long id, ProductCreateDTO dto);
 
     void remove(Long id);
+
+    ProductVO getByVOId(Long id);
 }

@@ -2,13 +2,15 @@ package com.example.mall.service.impl;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.example.mall.annotation.CostTime;
 import com.example.mall.common.BusinessException;
 import com.example.mall.dto.ProductCreateDTO;
+import com.example.mall.entity.Category;
 import com.example.mall.entity.Product;
+import com.example.mall.mapper.CategoryMapper;
 import com.example.mall.mapper.ProductMapper;
 import com.example.mall.service.ProductService;
 import com.example.mall.vo.ProductVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,9 +19,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductMapper productMapper;
+    private final CategoryMapper categoryMapper;
 
-    public ProductServiceImpl(ProductMapper productMapper) {
+    public ProductServiceImpl(ProductMapper productMapper, CategoryMapper categoryMapper) {
         this.productMapper = productMapper;
+        this.categoryMapper = categoryMapper;
     }
 
 
@@ -29,11 +33,6 @@ public class ProductServiceImpl implements ProductService {
                 new Page<>(current, size), keyword, categoryId);
     }
 
-    @Override
-    @CostTime("商品详情")
-    public Product getById(Long id) {
-        return productMapper.selectById(id);
-    }
 
     @Override
     public Long create(ProductCreateDTO dto) {
@@ -72,5 +71,20 @@ public class ProductServiceImpl implements ProductService {
         if (rows == 0) {
             throw new BusinessException("商品不存在: " + id);
         }
+    }
+
+    @Override
+    public ProductVO getByVOId(Long id) {
+        Product product = productMapper.selectById(id);
+        if (product == null) {
+            throw new BusinessException("商品不存在：" + id);
+        }
+        ProductVO productVO = new ProductVO();
+        BeanUtils.copyProperties(product, productVO);
+        Category category = categoryMapper.selectById(product.getCategoryId());
+        if (category != null) {
+            productVO.setCategoryName(category.getName());
+        }
+        return productVO;
     }
 }

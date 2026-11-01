@@ -27,9 +27,9 @@ public class ProductController {
         return Result.ok(productService.page(query.getPage(), query.getSize(), query.getCategoryId(), query.getKeyword()));
     }
     @GetMapping("/{id}")
-    public Result<Product> detail(@PathVariable Long id) {
-        Product p = productService.getById(id);
-        return p==null?Result.fail(ResultCode.NOT_FOUND):Result.ok(p);
+    public Result<ProductVO> detail(@PathVariable Long id) {
+        ProductVO vo = productService.getByVOId(id);
+        return vo==null?Result.fail(ResultCode.NOT_FOUND):Result.ok(vo);
     }
     @PostMapping
     public Result<Long> create(@RequestBody @Valid ProductCreateDTO dto){
