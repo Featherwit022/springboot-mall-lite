@@ -1,7 +1,7 @@
 package com.example.mall.dto;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 // 价格和库存一律由后端查，绝不信前端传来的金额
 public class OrderItemDTO {

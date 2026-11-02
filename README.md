@@ -1,6 +1,6 @@
 # mall · 简易商城后端
 
-基于 Spring Boot 2.3 + MyBatis-Plus 的单体电商后端示例项目，提供**登录鉴权**、**商品管理**与**下单（含库存扣减、幂等）**三条核心链路。项目刻意保持轻量，只保留分层结构、统一响应、全局异常、参数校验、日志切面、JWT 鉴权等工程骨架，不含前端页面，适合作为学习 SSM / Spring Boot 分层实践的基础模板，或作为新业务模块的起步脚手架。
+基于 Spring Boot 3.5 + MyBatis-Plus 的单体电商后端示例项目，提供**登录鉴权**、**商品管理**与**下单（含库存扣减、幂等）**三条核心链路。项目刻意保持轻量，只保留分层结构、统一响应、全局异常、参数校验、日志切面、JWT 鉴权等工程骨架，不含前端页面，适合作为学习 SSM / Spring Boot 分层实践的基础模板，或作为新业务模块的起步脚手架。
 
 鉴权部分刻意**不引入 Spring Security 的过滤器链**：只用 `spring-security-crypto` 拿 BCrypt，令牌签发用 JJWT，认证与授权落在 `HandlerInterceptor` 上。这样每个环节都是可见的普通 Java 代码，适合先把原理讲清楚，再迁移到框架。
 
@@ -63,21 +63,21 @@
 
 | 分类 | 选型 | 版本 |
 | --- | --- | --- |
-| 语言 | Java | 11（`pom.xml` 中 `java.version`） |
-| 框架 | Spring Boot（web / aop / validation） | 2.3.12.RELEASE |
-| ORM | MyBatis-Plus | 3.4.3.4 |
-| 数据库 | MySQL | 5.7 / 8.0 |
-| 驱动 | mysql-connector-java | 随 Boot 版本管理（8.0.x） |
-| 构建 | Maven | 3.6+ |
-| 鉴权 | spring-security-crypto（仅 BCrypt，不含过滤器链） | 随 Boot 版本管理（5.3.9） |
-| 令牌 | JJWT（api / impl / jackson） | 0.11.2 |
+| 语言 | Java | 17（`pom.xml` 中 `java.version`） |
+| 框架 | Spring Boot（web / aop / validation） | 3.5.16 |
+| ORM | MyBatis-Plus | 3.5.17（`mybatis-plus-spring-boot3-starter` + `mybatis-plus-jsqlparser`） |
+| 数据库 | MySQL | 8.0+（5.7 需将驱动固定为 8.0.33） |
+| 驱动 | mysql-connector-j | 随 Boot 版本管理（9.7.0） |
+| 构建 | Maven | 3.6.3+（建议 3.9.x） |
+| 鉴权 | spring-security-crypto（仅 BCrypt，不含过滤器链） | 随 Boot 版本管理（6.5.11） |
+| 令牌 | JJWT（api / impl / jackson） | 0.13.0 |
 | 其他 | Lombok **未使用**（实体手写 getter/setter） | — |
 
 环境要求：
-- JDK 11 及以上（项目按 11 编译，17 亦可运行）
-- Maven 3.6+
+- JDK 17 及以上（项目按 17 编译）
+- Maven 3.6.3+
 - 可访问的 MySQL 实例，库名建议 `mall`
-- 首次构建需要能访问 Maven 仓库（拉取 `jjwt` 与 `spring-security-crypto`），之后可离线编译
+- 首次构建需要能访问 Maven 仓库（拉取 `jjwt`、`mybatis-plus` 与 `spring-security-crypto`），之后可离线编译
 
 ---
 

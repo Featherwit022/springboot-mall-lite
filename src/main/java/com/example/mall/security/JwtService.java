@@ -4,7 +4,6 @@ import com.example.mall.config.AuthProperties;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Service;
 
@@ -42,15 +41,15 @@ public class JwtService {
     public String issue(LoginUser user) {
         Instant now = Instant.now();
         return Jwts.builder()
-                .setSubject(String.valueOf(user.getUserId()))
-                .setIssuer(properties.getIssuer())
+                .subject(String.valueOf(user.getUserId()))
+                .issuer(properties.getIssuer())
                 // jti 唯一标识本次令牌，未来做「单点下线 / 黑名单」时靠它定位
-                .setId(UUID.randomUUID().toString())
+                .id(UUID.randomUUID().toString())
                 .claim(CLAIM_USERNAME, user.getUsername())
                 .claim(CLAIM_ROLE, user.getRole().name())
-                .setIssuedAt(Date.from(now))
-                .setExpiration(Date.from(now.plus(properties.getTtl())))
-                .signWith(key, SignatureAlgorithm.HS256)
+                .issuedAt(Date.from(now))
+                .expiration(Date.from(now.plus(properties.getTtl())))
+                .signWith(key, Jwts.SIG.HS256)
                 .compact();
     }
 
@@ -60,14 +59,14 @@ public class JwtService {
      * 由调用方（拦截器）统一翻译成 4010，这里不吞异常。
      */
     public LoginUser parse(String token) {
-        Jws<Claims> jws = Jwts.parserBuilder()
-                .setSigningKey(key)
+        Jws<Claims> jws = Jwts.parser()
+                .verifyWith(key)
                 .requireIssuer(properties.getIssuer())
-                .setAllowedClockSkewSeconds(30)   // 容忍集群间几十秒时钟偏差
+                .clockSkewSeconds(30)   // 容忍集群间几十秒时钟偏差
                 .build()
-                .parseClaimsJws(token);
+                .parseSignedClaims(token);
 
-        Claims claims = jws.getBody();
+        Claims claims = jws.getPayload();
         Long userId = Long.valueOf(claims.getSubject());
         String username = claims.get(CLAIM_USERNAME, String.class);
         Role role = Role.valueOf(claims.get(CLAIM_ROLE, String.class));

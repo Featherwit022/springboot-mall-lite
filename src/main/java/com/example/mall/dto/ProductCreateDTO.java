@@ -1,6 +1,6 @@
 package com.example.mall.dto;
 
-import javax.validation.constraints.*;
+import jakarta.validation.constraints.*;
 import java.math.BigDecimal;
 
 public class ProductCreateDTO {

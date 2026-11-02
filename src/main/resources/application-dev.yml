@@ -8,6 +8,9 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 management:
+  info:
+    env:
+      enabled: true
   endpoints:
     web:
       exposure:

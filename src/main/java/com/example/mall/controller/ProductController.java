@@ -11,7 +11,7 @@ import com.example.mall.service.ProductService;
 import com.example.mall.vo.ProductVO;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/products")

@@ -1,13 +1,14 @@
 package com.example.mall.common;
 
+import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import javax.validation.ConstraintViolationException;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice   // = @ControllerAdvice + @ResponseBody，全局生效
@@ -47,6 +48,12 @@ public class GlobalExceptionHandler {
                 .map(v -> v.getPropertyPath() + " " + v.getMessage())
                 .collect(Collectors.joining("; "));
         return Result.fail(ResultCode.PARAM_ERROR, msg);
+    }
+
+    /** Boot 3.2+：未知路径会抛 NoResourceFoundException，避免被兜底成 5000 */
+    @ExceptionHandler(NoResourceFoundException.class)
+    public Result<Void> handleNotFound(NoResourceFoundException e) {
+        return Result.fail(ResultCode.NOT_FOUND, "接口不存在: /" + e.getResourcePath());
     }
 
     /** 兜底：所有没被前面接住的异常 */

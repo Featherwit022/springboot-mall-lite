@@ -10,7 +10,7 @@ import com.example.mall.vo.LoginVO;
 import com.example.mall.vo.UserVO;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")

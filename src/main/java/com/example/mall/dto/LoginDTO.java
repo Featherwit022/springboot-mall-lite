@@ -1,7 +1,7 @@
 package com.example.mall.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class LoginDTO {
     @NotBlank(message = "用户名不能为空")
