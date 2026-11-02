@@ -3,6 +3,8 @@ package com.example.mall.controller;
 import com.example.mall.common.BusinessException;
 import com.example.mall.common.Result;
 import com.example.mall.dto.OrderCreateDTO;
+import com.example.mall.security.LoginUser;
+import com.example.mall.security.UserContext;
 import com.example.mall.service.OrderService;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -29,9 +31,10 @@ public class OrderController {
      */
     @PostMapping
     public Result<String> create(@RequestBody @Valid OrderCreateDTO dto) {
+        Long userId = UserContext.require().getUserId();
         try {
             return Result.ok(orderService.createOrder(
-                    dto.getUserId(), dto.getItems(), dto.getIdempotentKey()));
+                    userId, dto.getItems(), dto.getIdempotentKey()));
         } catch (DuplicateKeyException e) {
             String cause = String.valueOf(e.getMostSpecificCause().getMessage());
 
@@ -41,7 +44,7 @@ public class OrderController {
             }
 
             // uk_user_idem：另一笔同 key 的请求先成功，本笔已回滚（库存也回滚了）
-            String orderNo = orderService.findOrderNo(dto.getUserId(), dto.getIdempotentKey());
+            String orderNo = orderService.findOrderNo(userId, dto.getIdempotentKey());
             if (orderNo == null) {
                 throw new BusinessException("订单正在处理中，请稍后查询订单列表");
             }

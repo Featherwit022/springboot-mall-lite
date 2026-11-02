@@ -30,7 +30,7 @@ public class WebLogAspect {
         String sig = pjp.getSignature().toShortString();
         long start = System.currentTimeMillis();
 
-        log.info("→ {} {} params={}", uri, sig, Arrays.toString(pjp.getArgs()));
+        log.info("→ {} {} params={}", uri, sig, safeArgs(pjp));
         try {
             Object result = pjp.proceed();          // 真正执行目标方法
             log.info("← {} {} {}ms", uri, sig, System.currentTimeMillis() - start);
@@ -57,5 +57,21 @@ public class WebLogAspect {
                 (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         return attrs == null ? "-" : attrs.getRequest().getRequestURI();
     }
-
+    private String safeArgs(ProceedingJoinPoint pjp) {
+        Object[] args = pjp.getArgs();
+        if (args == null || args.length == 0) {
+            return "[]";
+        }
+        String[] parts = new String[args.length];
+        for (int i = 0; i < args.length; i++) {
+            Object arg = args[i];
+            if (arg instanceof com.example.mall.dto.LoginDTO) {
+                com.example.mall.dto.LoginDTO dto = (com.example.mall.dto.LoginDTO) arg;
+                parts[i] = "LoginDTO(username=" + dto.getUsername() + ", password=***)";
+            } else {
+                parts[i] = String.valueOf(arg);
+            }
+        }
+        return Arrays.toString(parts);
+    }
 }

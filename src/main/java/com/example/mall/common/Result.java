@@ -14,13 +14,17 @@ public class Result<T> {
     }
 
     public static <T> Result<T> ok(T data) {
-        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
+        Result<T> r = new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
+        r.setTraceId(org.slf4j.MDC.get("traceId"));
+        return r;
     }
 
     public static <T> Result<T> ok() { return ok(null); }
 
     public static <T> Result<T> fail(ResultCode rc) {
-        return new Result<>(rc.getCode(), rc.getMessage(), null);
+        Result<T> r = new Result<>(rc.getCode(), rc.getMessage(), null);
+        r.setTraceId(org.slf4j.MDC.get("traceId"));
+        return r;
     }
 
     public static <T> Result<T> fail(ResultCode rc, String detail) {

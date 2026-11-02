@@ -1,5 +1,6 @@
 package com.example.mall.controller;
 
+import com.example.mall.annotation.Public;
 import com.example.mall.common.Result;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +12,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/ping")
 public class PingController {
-
+    @Public
     @GetMapping()
     public Map<String, Object> ping() {
         Map<String, Object> body = new LinkedHashMap<>();

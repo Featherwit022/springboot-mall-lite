@@ -26,3 +26,7 @@ mall:
   order:
     pay-timeout: 15m          # 自动绑定成 Duration.ofMinutes(15)
     max-items: 20
+  auth:
+    secret: ${MALL_JWT_SECRET:dev-only-secret-change-me-0123456789abcdef}
+    ttl: 2h
+    issuer: mall

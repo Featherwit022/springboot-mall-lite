@@ -24,3 +24,6 @@ management:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+mall:
+  auth:
+    secret: ${MALL_JWT_SECRET}
